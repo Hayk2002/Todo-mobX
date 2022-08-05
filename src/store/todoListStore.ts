@@ -31,7 +31,6 @@ export class TodoListStoreImpl {
         this.todoList = this.todoList
             .map(item => {
                 if (item.id === id) {
-                    console.log(item)
                     return {...item, completed: !item.completed};
                 }
                 return item;
@@ -42,7 +41,6 @@ export class TodoListStoreImpl {
         this.todoList = this.todoList
             .map(item => {
                 if (item.id === id) {
-                    console.log(item)
                     return { ...item, selected: !item.selected };
                 }
                 return item;
