@@ -11,27 +11,25 @@ interface ITaskView {
     deleteItem: (id: number) => void;
 }
 
-const TodoItem = ({ id, title, completed, selected, toggleItem,  selectItem, deleteItem}: ITaskView) => {
-    return (
-        <TodoItemBlock
-            $isSelected={selected}
-        >
-            <div>
-                <h3>{title}</h3>
-                <span>
+const TodoItem = ({ id, title, completed, selected, toggleItem,  selectItem, deleteItem}: ITaskView) => (
+    <TodoItemBlock
+        $isSelected={selected}
+    >
+        <div>
+            <h3>{title}</h3>
+            <span>
                     Completed:
                     <input
                         type="checkbox"
                         checked={completed}
-                        onChange={(event) => toggleItem(id)}/>
+                        onChange={() => toggleItem(id)}/>
                 </span>
-            </div>
-            <div>
-                <SelectButton onClick={() => selectItem(id)}>{selected ? 'Unselect' : 'Select'}</SelectButton>
-                <DeleteButton onClick={() => deleteItem(id)}>Delete</DeleteButton>
-            </div>
-        </TodoItemBlock>
-    );
-};
+        </div>
+        <div>
+            <SelectButton onClick={() => selectItem(id)}>{selected ? 'Unselect' : 'Select'}</SelectButton>
+            <DeleteButton onClick={() => deleteItem(id)}>Delete</DeleteButton>
+        </div>
+    </TodoItemBlock>
+);
 
 export default TodoItem;

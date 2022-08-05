@@ -8,32 +8,26 @@ import {Input} from "../layouts/styles";
 
 const TodoList: React.FC<ITodoListProps> = observer(({ todoStore }) => {
     const [list, setList] = useState<ITodoItem[]>(todoStore.todoList);
-    const [inputValue, setInputValue] = useState<string>("");
 
     useEffect(() => {
-        if (todoStore.searchedList.length) {
-            setList(todoStore.searchedList);
-        }
-
-        if (!todoStore.searchedList.length && inputValue.length) {
-            setList([]);
-        }
-
-        if (!todoStore.searchedList.length && !inputValue.length) {
-            setList(todoStore.todoList);
-        }
-    }, [todoStore.todoList, todoStore.searchedList, inputValue]);
+        setList(todoStore.todoList);
+    }, [todoStore.todoList]);
 
     const handleSearch = (event: any) => {
-        setInputValue(event.target.value);
-        todoStore.searchTodos(event.target.value);
+        const inputValue = event.target.value;
+
+        if (inputValue !== '') {
+            const result = todoStore.todoList.filter(item => item.title.includes(inputValue));
+            setList(result);
+        } else {
+            setList(todoStore.todoList);
+        }
     };
 
     return (
         <TodoListWrapper>
             {todoStore.todoList.length ? (
                 <Input
-                    value={inputValue}
                     onChange={handleSearch}
                     placeholder='Search todo'
                     style={{marginBottom: 30}}
