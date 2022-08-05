@@ -3,16 +3,19 @@ import {ITodoItem} from "../utils/types";
 
 export class TodoListStoreImpl {
     todoList: ITodoItem[] = [];
+    searchedList: ITodoItem[] = [];
 
     constructor() {
         makeObservable(this, {
             todoList: observable,
+            searchedList: observable,
             addTodo: action,
             toggleTodo: action,
             selectTodo: action,
             deleteTodo: action,
             deleteAllSelected: action,
             toggleAllSelected: action,
+            searchTodos: action,
         });
     }
 
@@ -65,6 +68,10 @@ export class TodoListStoreImpl {
             return item;
         });
     }
+
+    searchTodos = (title: string) => {
+        this.searchedList = this.todoList.filter(item => item.title.includes(title));
+    };
 }
 
 export const TodoListStore = new TodoListStoreImpl();

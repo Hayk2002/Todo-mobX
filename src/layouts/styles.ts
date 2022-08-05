@@ -11,9 +11,7 @@ export const MainContent = styled.main`
   margin-top: 30px;
 `;
 
-export const TodoInput = styled.input.attrs(() => ({
-    placeholder: "Type title"
-}))`
+export const Input = styled.input`
   width: 260px;
   padding: 10px;
   outline: none;

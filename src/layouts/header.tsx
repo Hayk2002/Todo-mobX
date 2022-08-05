@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {HeaderWrapper, TodoInput, Button, CounterBlock} from "./styles";
+import {HeaderWrapper, Input, Button, CounterBlock} from "./styles";
 import {observer} from "mobx-react";
 import {ITodoItem, ITodoListProps} from "../utils/types";
 
 const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState<string>("");
     const [selectedTodos, setSelectedTodos] = useState<ITodoItem[]>([]);
     const [completedTodos, setCompletedTodos] = useState<ITodoItem[]>([]);
 
@@ -18,12 +18,13 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
             todoStore.addTodo(inputValue);
             setInputValue("");
         }
-    }
+    };
 
     return (
         <HeaderWrapper>
-            <TodoInput
+            <Input
                 value={inputValue}
+                placeholder='Type title'
                 onChange={(event) => setInputValue(event.target.value)}
             />
             <Button
