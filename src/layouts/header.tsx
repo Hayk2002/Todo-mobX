@@ -1,14 +1,12 @@
 import {observer} from "mobx-react";
 import React, {useEffect, useState} from "react";
 
-import { generateTodos} from "../utils/helpers";
-import {ITodoItem, ITodoListProps} from "../utils/types";
-import {HeaderWrapper, Input, Button, CounterBlock} from "./styles";
+import { generateTodos } from "../utils/helpers";
+import { ITodoListProps } from "../utils/types";
+import { HeaderWrapper, Input, Button, CounterBlock } from "./styles";
 
 const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
     const [inputValue, setInputValue] = useState<string>("");
-    const [selectedTodos, setSelectedTodos] = useState<ITodoItem[]>([]);
-    const [completedTodos, setCompletedTodos] = useState<ITodoItem[]>([]);
 
     /**
      * Use the bottom hook in order to test 1000 todos handling case.
@@ -20,9 +18,9 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
     }, [todoStore])*/
 
     useEffect(() => {
-        setSelectedTodos(todoStore.todoList.filter(item => item.selected));
-        setCompletedTodos(todoStore.todoList.filter(item => item.completed));
-    }, [todoStore.todoList]);
+        todoStore.setSelectedTodos();
+        todoStore.setCompletedTodos();
+    }, [todoStore, todoStore.todoList]);
 
     const handleTodoAddition = (event: any) => {
         event.preventDefault();
@@ -47,10 +45,10 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
                 Add
             </Button>
             <CounterBlock>
-                <div>Completed {completedTodos.length} of {todoStore.todoList.length}</div>
-                <div>Selected {selectedTodos.length} of {todoStore.todoList.length}</div>
+                <div>Completed {todoStore.completedTodos.length} of {todoStore.todoList.length}</div>
+                <div>Selected {todoStore.selectedTodos.length} of {todoStore.todoList.length}</div>
             </CounterBlock>
-            {todoStore.todoList.some(item => item.selected) ?
+            {todoStore.selectedTodos.length ?
                 <Button
                     type="button"
                     $isDisabled={false}
@@ -60,7 +58,7 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
                 </Button>
                 : null
             }
-            {selectedTodos.length && selectedTodos.some(item => !item.completed) ?
+            {todoStore.selectedTodos.length && todoStore.selectedTodos.some(item => !item.completed) ?
                 <Button
                     type="button"
                     $isDisabled={false}
@@ -70,7 +68,7 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
                 </Button>
                 : null
             }
-            {selectedTodos.length && selectedTodos.some(item => item.completed) ?
+            {todoStore.selectedTodos.length && todoStore.selectedTodos.some(item => item.completed) ?
                 <Button
                     type="button"
                     $isDisabled={false}

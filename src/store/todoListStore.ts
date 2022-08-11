@@ -5,11 +5,15 @@ import { ITodoItem } from "../utils/types";
 export class TodoListStoreImpl {
     todoList: ITodoItem[] = [];
     searchList: ITodoItem[] = [];
+    selectedTodos: ITodoItem[] = [];
+    completedTodos: ITodoItem[] = [];
 
     constructor() {
         makeObservable(this, {
             todoList: observable,
             searchList: observable,
+            selectedTodos: observable,
+            completedTodos: observable,
             addTodo: action,
             toggleTodo: action,
             selectTodo: action,
@@ -19,6 +23,8 @@ export class TodoListStoreImpl {
             resetSearchList: action,
             setTodoList: action,
             handleTodoSearch: action,
+            setSelectedTodos: action,
+            setCompletedTodos: action,
         });
     }
 
@@ -79,6 +85,14 @@ export class TodoListStoreImpl {
     }
 
     resetSearchList = () => this.searchList = [];
+
+    setSelectedTodos = () => {
+        this.selectedTodos = this.todoList.filter(item => item.selected);
+    }
+
+    setCompletedTodos = () => {
+        this.completedTodos = this.todoList.filter(item => item.completed);
+    }
 
     /**
      * Use the bottom method in order to test 1000 todos handling case.
