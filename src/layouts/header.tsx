@@ -1,19 +1,32 @@
-import React, {useEffect, useState} from "react";
-import {HeaderWrapper, Input, Button, CounterBlock} from "./styles";
 import {observer} from "mobx-react";
+import React, {useEffect, useState} from "react";
+
+import { generateTodos} from "../utils/helpers";
 import {ITodoItem, ITodoListProps} from "../utils/types";
+import {HeaderWrapper, Input, Button, CounterBlock} from "./styles";
 
 const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
     const [inputValue, setInputValue] = useState<string>("");
     const [selectedTodos, setSelectedTodos] = useState<ITodoItem[]>([]);
     const [completedTodos, setCompletedTodos] = useState<ITodoItem[]>([]);
 
+    /**
+     * Use the bottom hook in order to test 1000 todos handling case.
+     * */
+
+    /*useEffect(() => {
+        const todos = generateTodos();
+        todoStore.setTodoList(todos);
+    }, [todoStore])*/
+
     useEffect(() => {
         setSelectedTodos(todoStore.todoList.filter(item => item.selected));
         setCompletedTodos(todoStore.todoList.filter(item => item.completed));
     }, [todoStore.todoList]);
 
-    const handleTodoAddition = () => {
+    const handleTodoAddition = (event: any) => {
+        event.preventDefault();
+
         if (inputValue.length) {
             todoStore.addTodo(inputValue);
             setInputValue("");
@@ -21,15 +34,15 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
     };
 
     return (
-        <HeaderWrapper>
+        <HeaderWrapper onSubmit={handleTodoAddition}>
             <Input
                 value={inputValue}
                 placeholder='Type title'
                 onChange={(event) => setInputValue(event.target.value)}
             />
             <Button
+                type="submit"
                 $isDisabled={!inputValue.length}
-                onClick={handleTodoAddition}
                 >
                 Add
             </Button>
@@ -39,6 +52,7 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
             </CounterBlock>
             {todoStore.todoList.some(item => item.selected) ?
                 <Button
+                    type="button"
                     $isDisabled={false}
                     onClick={todoStore.deleteAllSelected}
                 >
@@ -48,6 +62,7 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
             }
             {selectedTodos.length && selectedTodos.some(item => !item.completed) ?
                 <Button
+                    type="button"
                     $isDisabled={false}
                     onClick={() => todoStore.toggleAllSelected(true)}
                 >
@@ -57,6 +72,7 @@ const Header: React.FC<ITodoListProps> = observer(({ todoStore }) => {
             }
             {selectedTodos.length && selectedTodos.some(item => item.completed) ?
                 <Button
+                    type="button"
                     $isDisabled={false}
                     onClick={() => todoStore.toggleAllSelected(false)}
                 >

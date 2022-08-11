@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const HeaderWrapper = styled.header`
+export const HeaderWrapper = styled.form`
   display: flex;
   padding: 20px;
   border-radius: 20px;
@@ -21,9 +21,7 @@ export const Input = styled.input`
   background-color: #cbcbcb;
 `;
 
-export const Button = styled.button.attrs(() => ({
-    type: "button"
-}))`
+export const Button = styled.button`
   color: #ffffff;
   cursor: pointer;
   pointer-events: ${({$isDisabled}: {$isDisabled: boolean}) => $isDisabled && "none"};

@@ -1,5 +1,7 @@
-import {TodoItemBlock} from "./styles";
-import {DeleteButton, SelectButton} from "../layouts/styles";
+import { memo } from "react";
+
+import { TodoItemBlock } from "./styles";
+import { DeleteButton, SelectButton } from "../layouts/styles";
 
 interface ITaskView {
     id: number;
@@ -11,25 +13,24 @@ interface ITaskView {
     deleteItem: (id: number) => void;
 }
 
-const TodoItem = ({ id, title, completed, selected, toggleItem,  selectItem, deleteItem}: ITaskView) => (
+const TodoItem = ({ id, title, completed, selected, toggleItem,  selectItem, deleteItem}: ITaskView) =>
     <TodoItemBlock
         $isSelected={selected}
     >
         <div>
             <h3>{title}</h3>
             <span>
-                    Completed:
-                    <input
-                        type="checkbox"
-                        checked={completed}
-                        onChange={() => toggleItem(id)}/>
-                </span>
+                Completed:
+                <input
+                    type="checkbox"
+                    checked={completed}
+                    onChange={() => toggleItem(id)}/>
+            </span>
         </div>
         <div>
             <SelectButton onClick={() => selectItem(id)}>{selected ? 'Unselect' : 'Select'}</SelectButton>
             <DeleteButton onClick={() => deleteItem(id)}>Delete</DeleteButton>
         </div>
     </TodoItemBlock>
-);
 
-export default TodoItem;
+export default memo(TodoItem);

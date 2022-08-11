@@ -1,40 +1,52 @@
-import React, {useEffect, useState} from "react";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
+import React, { useEffect, useState } from "react";
 
-import TaskViewBlock from "./todoItem";
-import {ITodoItem, ITodoListProps} from "../utils/types";
-import {TodoListWrapper} from "./styles";
-import {Input} from "../layouts/styles";
+import TodoItem from "./todoItem";
+import { Input } from "../layouts/styles";
+import { TodoListWrapper } from "./styles";
+import { ITodoItem, ITodoListProps } from "../utils/types";
 
 const TodoList: React.FC<ITodoListProps> = observer(({ todoStore }) => {
     const [list, setList] = useState<ITodoItem[]>(todoStore.todoList);
+    const [inputValue, setInputValue] = useState<string>("");
 
     useEffect(() => {
-        setList(todoStore.todoList);
-    }, [todoStore.todoList]);
-
-    const handleSearch = (event: any) => {
-        const inputValue = event.target.value;
-
-        if (inputValue !== '') {
-            const result = todoStore.todoList.filter(item => item.title.includes(inputValue));
-            setList(result);
+        if (todoStore.searchList.length || inputValue !== "") {
+            setList(todoStore.searchList);
         } else {
             setList(todoStore.todoList);
         }
+    }, [inputValue, todoStore.searchList, todoStore.todoList]);
+
+    const handleSearch = (event: any) => {
+        const value = event.target.value;
+        setInputValue(value);
+        todoStore.handleTodoSearch(value);
+    };
+
+    const handleSearchReset = () => {
+        setInputValue("");
+        todoStore.resetSearchList();
     };
 
     return (
         <TodoListWrapper>
-            {todoStore.todoList.length ? (
+            <div>
                 <Input
+                    value={inputValue}
                     onChange={handleSearch}
                     placeholder='Search todo'
-                    style={{marginBottom: 30}}
+                    style={{ marginBottom: 30 }}
                 />
-            ) : null}
+                {inputValue && <span
+                    style={{ marginLeft: 20 }}
+                    onClick={handleSearchReset}
+                >
+                    clear
+                </span>}
+            </div>
             {list.map((item: ITodoItem) => (
-                <TaskViewBlock
+                <TodoItem
                     {...item}
                     key={item.id}
                     toggleItem={todoStore.toggleTodo}

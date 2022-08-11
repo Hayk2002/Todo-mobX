@@ -1,18 +1,24 @@
-import {action, makeObservable, observable} from "mobx";
-import {ITodoItem} from "../utils/types";
+import { action, makeObservable, observable } from "mobx";
+
+import { ITodoItem } from "../utils/types";
 
 export class TodoListStoreImpl {
     todoList: ITodoItem[] = [];
+    searchList: ITodoItem[] = [];
 
     constructor() {
         makeObservable(this, {
             todoList: observable,
+            searchList: observable,
             addTodo: action,
             toggleTodo: action,
             selectTodo: action,
             deleteTodo: action,
             deleteAllSelected: action,
             toggleAllSelected: action,
+            resetSearchList: action,
+            setTodoList: action,
+            handleTodoSearch: action,
         });
     }
 
@@ -62,6 +68,24 @@ export class TodoListStoreImpl {
             }
             return item;
         });
+    }
+
+    handleTodoSearch = (inputValue: string) => {
+        if (inputValue !== "") {
+            this.searchList = this.todoList.filter(({ title }) => title.includes(inputValue));
+        } else {
+            this.searchList = [];
+        }
+    }
+
+    resetSearchList = () => this.searchList = [];
+
+    /**
+     * Use the bottom method in order to test 1000 todos handling case.
+    * */
+
+    setTodoList = (list: ITodoItem[]) => {
+        this.todoList = list;
     }
 }
 
